@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -20,5 +21,13 @@ func main() {
 
 	r.HandleFunc("/", routes.HomeHandler)
 
-	http.ListenAndServe(":3000", r)
+	r.HandleFunc("/users", routes.GetUsersHandler).Methods("GET")
+	r.HandleFunc("/users/{id}", routes.GetUserHandler).Methods("GET")
+	r.HandleFunc("/users", routes.PostUserHandler).Methods("POST")
+	r.HandleFunc("/users", routes.DeleteUserHandler).Methods("DELETE")
+
+	err := http.ListenAndServe(":4000", r)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }
