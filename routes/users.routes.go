@@ -8,7 +8,9 @@ import (
 )
 
 func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Get Users"))
+	var users []models.User
+	db.DB.Find(&users)
+	json.NewEncoder(w).Encode(&users)
 }
 
 func GetUserHandler(w http.ResponseWriter, r *http.Request) {
