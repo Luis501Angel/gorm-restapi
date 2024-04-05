@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
 	"github.com/luis501angel/go-gorm-restapi/db"
 	"github.com/luis501angel/go-gorm-restapi/models"
 	"net/http"
@@ -14,7 +15,16 @@ func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUserHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Get User"))
+	var user models.User
+	params := mux.Vars(r)
+	db.DB.First(&user, params["id"])
+	if user.ID == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("User not found"))
+		return
+	}
+
+	json.NewEncoder(w).Encode(&user)
 }
 
 func PostUserHandler(w http.ResponseWriter, r *http.Request) {
